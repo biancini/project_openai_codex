@@ -11,11 +11,38 @@ body {
   background: #343541;
 }
 
+h1 {
+  text-align: center;
+}
+
+h2 {
+  font-style: italic;
+}
+
 #app {
   width: 100vw;
   height: 100vh;
   background: #343541;
 
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#cv {
+  height: 100%;
+  max-width: 70%;
+  flex: 1;
+  border: 1px solid black;
+  background-color: whitesmoke;
+  padding: 10px;
+}
+
+#chat {
+  height: 100%;
+  max-width: 30%;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -42,6 +69,11 @@ body {
 /* hides scrollbar */
 #chat_container::-webkit-scrollbar {
   display: none;
+}
+
+.space {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .wrapper {
@@ -137,7 +169,24 @@ textarea {
   outline: none;
 }
 
-button {
+textarea[id=summary] {
+  border: 1px solid black;
+  color: black;
+}
+
+button[type=next] {
+    background-color: #00aaff; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button[type=submit] {
   outline: 0;
   border: 0;
   cursor: pointer;

@@ -9,12 +9,35 @@
   </head>
   <body>
     <div id="app">
-      <div id="chat_container"></div>
+      <div id="cv">
+        <h1>CV helper!</h1>
 
-      <form>
-        <textarea name="prompt" rows="1" cols="1" placeholder="Ask codex..."></textarea>
-        <button type="submit"><img src="assets/send.svg" alt="send" />
-      </form>
+        <h2>Inserisci il summary del tuo CV</h2>
+        <textarea id="summary" rows="15" cols="1" placeholder="Inserisci qui il summary"></textarea>
+        <button id="summary_ask" type="next">Chiedimi un parere...</button>
+        
+        
+        <div class="wrapper ai space">
+          <div class="chat">
+            <div class="profile">
+              <img  src="./assets/bot.svg" alt="bot" />
+            </div>
+            <div class="message" id="summary_feedback"></div>
+          </div>
+        </div>
+        
+        <hr/>
+
+      </div>
+
+      <div id="chat">
+        <div id="chat_container"></div>
+
+        <form id="form_chat">
+          <textarea name="prompt" rows="1" cols="1" placeholder="Chiedimi qualcosa..."></textarea>
+          <button type="submit"><img src="assets/send.svg" alt="send" />
+        </form>
+      </div>
     </div>
 
     <script type="module" src="script.js"></script>

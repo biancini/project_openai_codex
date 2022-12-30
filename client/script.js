@@ -1,10 +1,14 @@
 import bot from './assets/bot.svg'
 import user from './assets/user.svg'
 
-const form = document.querySelector('form')
-const chatContainer = document.querySelector('#chat_container')
+const form = document.querySelector('#form_chat');
+const chatContainer = document.querySelector('#chat_container');
 
-let loadInterval
+const summary = document.querySelector('#summary');
+const summary_ask = document.querySelector('#summary_ask');
+
+let loadInterval;
+let serverUrl = 'http://localhost:9000';
 
 function loader(element) {
     element.textContent = ''
@@ -63,30 +67,30 @@ function chatStripe(isAi, value, uniqueId) {
 }
 
 const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    const data = new FormData(form)
+    const data = new FormData(form);
 
     // user's chatstripe
     chatContainer.innerHTML += chatStripe(false, data.get('prompt'))
 
     // to clear the textarea input 
-    form.reset()
+    form.reset();
 
     // bot's chatstripe
-    const uniqueId = generateUniqueId()
-    chatContainer.innerHTML += chatStripe(true, " ", uniqueId)
+    const uniqueId = generateUniqueId();
+    chatContainer.innerHTML += chatStripe(true, " ", uniqueId);
 
     // to focus scroll to the bottom 
     chatContainer.scrollTop = chatContainer.scrollHeight;
 
     // specific message div 
-    const messageDiv = document.getElementById(uniqueId)
+    const messageDiv = document.getElementById(uniqueId);
 
     // messageDiv.innerHTML = "..."
-    loader(messageDiv)
+    loader(messageDiv);
 
-    const response = await fetch('http://localhost:9000/', { //https://codex-im0y.onrender.com/
+    const response = await fetch(`${serverUrl}/chat`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -94,27 +98,61 @@ const handleSubmit = async (e) => {
         body: JSON.stringify({
             prompt: data.get('prompt')
         })
-    })
+    });
 
-    clearInterval(loadInterval)
-    messageDiv.innerHTML = " "
+    clearInterval(loadInterval);
+    messageDiv.innerHTML = " ";
 
     if (response.ok) {
         const data = await response.json();
-        const parsedData = data.bot.trim() // trims any trailing spaces/'\n' 
+        const parsedData = data.bot.trim(); // trims any trailing spaces/'\n' 
 
         typeText(messageDiv, parsedData)
     } else {
-        const err = await response.text()
+        const err = await response.text();
 
-        messageDiv.innerHTML = "Something went wrong"
-        alert(err)
+        messageDiv.innerHTML = "Something went wrong";
+        alert(err);
     }
 }
 
-form.addEventListener('submit', handleSubmit)
+const handleSummary = async (e) => {
+    e.preventDefault();
+
+    const messageDiv = document.getElementById("summary_feedback");
+    loader(messageDiv)
+
+    const response = await fetch(`${serverUrl}/cv_summary`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            text: summary.value
+        })
+    });
+
+    clearInterval(loadInterval);
+    messageDiv.innerHTML = " ";
+
+    if (response.ok) {
+        const data = await response.json();
+        const parsedData = data.bot.trim(); // trims any trailing spaces/'\n' 
+
+        typeText(messageDiv, parsedData);
+    } else {
+        const err = await response.text();
+
+        messageDiv.innerHTML = "Something went wrong";
+        alert(err);
+    }
+}
+
+
+summary_ask.addEventListener('click', handleSummary);
+form.addEventListener('submit', handleSubmit);
 form.addEventListener('keyup', (e) => {
     if (e.keyCode === 13) {
         handleSubmit(e)
     }
-})
+});
